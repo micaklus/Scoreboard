@@ -9,6 +9,17 @@ import org.sportradar.domain.repository.ScoreboardRepository
 
 class ScoreboardApi(private val repository: ScoreboardRepository) {
     fun startMatch(homeTeam: Team, awayTeam: Team) {
+        require(homeTeam != awayTeam) { "Teams must have unique names" }
+        val matches = repository.getAllOngoingMatches()
+        require(matches.none { it.homeTeam == homeTeam || it.awayTeam == homeTeam }) {
+            "${homeTeam.name} is already playing another match"
+        }
+        require(matches.none { it.homeTeam == awayTeam || it.awayTeam == awayTeam }) {
+            "${awayTeam.name} is already playing another match"
+        }
+        require(matches.none { it.homeTeam == homeTeam && it.awayTeam == awayTeam }) {
+            "Match between these teams already exists"
+        }
         repository.addMatch(Match(homeTeam, awayTeam, Score(0), Score(0)))
     }
 

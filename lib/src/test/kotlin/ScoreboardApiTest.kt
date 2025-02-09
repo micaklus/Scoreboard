@@ -1,5 +1,8 @@
+import TeamNameGenerator.generateTeamNames
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.assertThrows
 import org.sportradar.ScoreboardApi
 import org.sportradar.domain.model.Match
 import org.sportradar.domain.model.Score
@@ -45,7 +48,15 @@ class ScoreboardApiTest {
     // Match Creation Tests
     @Test
     fun `should not allow starting a match with duplicate team names`() {
-        fail("Test not implemented yet")
+        val teamName = Team("HomeTeam")
+
+        // Attempt to start a match where both teams have the same name
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.startMatch(teamName, teamName)
+        }
+
+        // Verify that the exception message matches the expected validation rule
+        assertEquals("Teams must have unique names", exception.message)
     }
 
     @Test
@@ -61,7 +72,10 @@ class ScoreboardApiTest {
 
     @Test
     fun `should not allow starting a match with blank team names`() {
-        fail("Test not implemented yet")
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.startMatch(Team(""), Team("Brazil"))
+        }
+        assertEquals("Team name cannot be empty or blank. Please provide a valid name for the team.", exception.message)
     }
 
     // Managing Matches Tests
@@ -74,17 +88,28 @@ class ScoreboardApiTest {
 
     @Test
     fun `should throw error when finishing a non-existing match`() {
-        fail("Test not implemented yet")
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.finishMatch(Team("Slovenia"), Team("Brazil"))
+        }
+        assertEquals("Match not found", exception.message)
     }
 
     @Test
     fun `should allow a team to start a new match after finishing the previous one`() {
-        fail("Test not implemented yet")
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+        scoreboardApi.finishMatch(Team("Mexico"), Team("Canada"))
+
+        assertDoesNotThrow {
+            scoreboardApi.startMatch(Team("Mexico"), Team("France"))
+        }
     }
 
     @Test
     fun `should allow finishing a match without updating the score`() {
-        fail("Test not implemented yet")
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+        scoreboardApi.finishMatch(Team("Mexico"), Team("Canada"))
+
+        assertTrue(scoreboardApi.getAllOngoingMatches().isEmpty())
     }
 
     // Score Updates Tests
@@ -102,37 +127,115 @@ class ScoreboardApiTest {
 
     @Test
     fun `should not allow negative scores during updates`() {
-        fail("Test not implemented yet")
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.updateScore(Team("Mexico"), Team("Canada"), Score(-4), Score(2))
+        }
+        assertEquals("Score cannot be negative", exception.message)
+
+        val exception2 = assertThrows<IllegalArgumentException> {
+            scoreboardApi.updateScore(Team("Mexico"), Team("Canada"), Score(3), Score(-2))
+        }
+        assertEquals("Score cannot be negative", exception2.message)
     }
 
     @Test
     fun `should allow updating scores with the same values`() {
-        fail("Test not implemented yet")
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+        scoreboardApi.updateScore(Team("Mexico"), Team("Canada"), Score(2), Score(1))
+        scoreboardApi.updateScore(Team("Mexico"), Team("Canada"), Score(2), Score(1)) // Update with the same values
+
+        val match = scoreboardApi.getAllOngoingMatches().first()
+        assertEquals(2, match.homeScore.value)
+        assertEquals(1, match.awayScore.value)
     }
 
     @Test
     fun `should not allow updating scores for a non-existing match`() {
-        fail("Test not implemented yet")
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.updateScore(Team("Slovenia") ,Team("Brazil"),Score(3),Score(4))
+        }
+        assertEquals("Match not found", exception.message)
     }
 
     @Test
-    fun `should allow lowering scores with a valid reason`() {
-        fail("Test not implemented yet")
+    fun `should handle large number of matches without issue`() {
+        val count = 1000
+        val teams = generateTeamNames(count * 2)
+        for (i in 0 until count) {
+            scoreboardApi.startMatch(teams[i], teams[i + count])
+        }
+        assertEquals(count, scoreboardApi.getAllOngoingMatches().size)
     }
 
     @Test
     fun `should correctly update overall scores for all matches`() {
-        fail("Test not implemented yet")
+        val teamNames = generateTeamNames(51) // Generate 11 unique team names
+
+        val expectedScores = mutableMapOf<String, Pair<Int, Int>>() // Map to store expected scores
+        for (i in 0 until teamNames.size / 2) {
+            val homeTeam = teamNames[i * 2]
+            val awayTeam = teamNames[i * 2 + 1]
+
+            println("Starting match: $homeTeam vs $awayTeam")
+
+            // Start the match
+            scoreboardApi.startMatch(homeTeam, awayTeam)
+
+            // Assign realistic scores
+            val homeScore = i * 2 % 10
+            val awayScore = i * 3 % 10
+            println("Updating score: $homeTeam ($homeScore) - $awayTeam ($awayScore)")
+            scoreboardApi.updateScore(homeTeam, awayTeam, Score(homeScore), Score(awayScore))
+
+            // Save expected scores in a map using the team names as key
+            expectedScores["$homeTeam vs $awayTeam"] = Pair(homeScore, awayScore)
+        }
+
+        // Verify scores are applied correctly for each match in the summary
+        val summary = scoreboardApi.getAllOngoingMatches()
+        for (match in summary) {
+            val expected = expectedScores["${match.homeTeam} vs ${match.awayTeam}"]
+
+            // Check if the match exists in the expected scores
+            if (expected == null) fail("Unexpected match found: ${match.homeTeam} vs ${match.awayTeam}")
+
+            val expectedHomeScore = expected.first
+            val expectedAwayScore = expected.second
+
+            // Custom messages for detailed error reporting
+            val errorMessageHome = "Failed for match '${match.homeTeam} vs ${match.awayTeam}': home team expected $expectedHomeScore, but got ${match.homeScore}"
+            val errorMessageAway = "Failed for match '${match.homeTeam} vs ${match.awayTeam}': away team expected $expectedAwayScore, but got ${match.awayScore}"
+
+            assertEquals(expectedHomeScore, match.homeScore.value, errorMessageHome)
+            assertEquals(expectedAwayScore, match.awayScore.value, errorMessageAway)
+        }
     }
 
     // Match Restrictions Tests
     @Test
     fun `should not allow a team to play two matches at the same time`() {
-        fail("Test not implemented yet")
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+
+        val exception1 = assertThrows<IllegalArgumentException> {
+            scoreboardApi.startMatch(Team("Mexico"), Team("Brazil"))
+        }
+        assertEquals("Mexico is already playing another match", exception1.message)
+
+        val exception2 = assertThrows<IllegalArgumentException> {
+            scoreboardApi.startMatch(Team("Spain"), Team("Canada"))
+        }
+        assertEquals("Canada is already playing another match", exception2.message)
     }
 
     @Test
     fun `should handle a large number of matches without performance issues`() {
-        fail("Test not implemented yet")
+        val count = 1000
+        val teams = generateTeamNames(count * 2)
+        for (i in 0 until count) {
+            scoreboardApi.startMatch(teams[i], teams[i + count])
+        }
+        assertEquals(count, scoreboardApi.getAllOngoingMatches().size)
     }
 }

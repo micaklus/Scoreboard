@@ -48,3 +48,5 @@ Call 4 methods
 2. Write assumptions
 3. Generate fail tests for all assumptions
 4. Run all test first time (all fails)
+5. Written all tests and running them successfully
+6. 
