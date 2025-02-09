@@ -3,12 +3,16 @@ package org.sportradar.data.repository
 import org.sportradar.domain.model.Match
 import org.sportradar.domain.model.Team
 import org.sportradar.domain.repository.ScoreboardRepository
+import java.util.concurrent.atomic.AtomicLong
 
 class InMemoryScoreboardRepository : ScoreboardRepository {
+
+    private val matchCounter = AtomicLong(0)
     private val matches = mutableListOf<Match>()
 
     override fun addMatch(match: Match) {
-       matches.add(match)
+        val id = matchCounter.getAndIncrement() // Generate unique ID
+        matches.add(match.copy(id = id))
     }
 
     override fun updateMatch(match: Match) {
