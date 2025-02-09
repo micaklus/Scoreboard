@@ -3,7 +3,7 @@ package org.sportradar.domain.repository
 import org.sportradar.domain.model.Match
 import org.sportradar.domain.model.Team
 
-interface ScoreboardRepository {
+internal interface ScoreboardRepository {
     fun addMatch(match: Match)
     fun updateMatch(match: Match)
     fun deleteMatch(match: Match)

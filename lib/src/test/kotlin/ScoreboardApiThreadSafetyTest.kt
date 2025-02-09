@@ -8,8 +8,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.test.Test
 
 class ScoreboardApiThreadSafetyTest {
-    private val repository = InMemoryScoreboardRepository()
-    private val api = ScoreboardApi(repository)
+    private val api = ScoreboardApi.create()
 
     @Test
     fun `test concurrent startMatch operations`() {

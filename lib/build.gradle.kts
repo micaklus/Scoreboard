@@ -1,8 +1,9 @@
 plugins {
     kotlin("jvm") version "2.1.0"
+    id("org.jetbrains.dokka") version "1.9.0"
 }
 
-group = "org.example.lib"
+group = "org.sportradar.lib"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -17,6 +18,12 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks.dokkaHtml {
+    outputDirectory.set(file("build/docs/dokka"))
+}
+
 kotlin {
     jvmToolchain(17)
+    explicitApiWarning()
 }

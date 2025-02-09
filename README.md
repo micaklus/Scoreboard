@@ -41,12 +41,14 @@ Clone the repository and build the project. SDK code with tests is located lib m
 
 ## Usage
 
-Call 4 methods
+Is described in documentation folder
+
 
 ## Steps in solving problem
-1. Create multi module project
+1. Create multi-module project
 2. Write assumptions
 3. Generate fail tests for all assumptions
 4. Run all test first time (all fails)
 5. Written all tests and running them successfully
-6. 
+6. Threading tests and fixing
+7. Documentation comments for usable methods and classes

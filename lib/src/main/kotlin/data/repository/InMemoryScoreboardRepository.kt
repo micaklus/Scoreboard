@@ -6,7 +6,7 @@ import org.sportradar.domain.repository.ScoreboardRepository
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-class InMemoryScoreboardRepository : ScoreboardRepository {
+internal class InMemoryScoreboardRepository : ScoreboardRepository {
 
     private val matchCounter = AtomicLong(0)
     private val matches: MutableMap<Pair<Team, Team>, Match> = ConcurrentHashMap()
@@ -41,7 +41,8 @@ class InMemoryScoreboardRepository : ScoreboardRepository {
     }
 
     override fun getAllOngoingMatches(): List<Match> {
-        return matches.values.toList().sortedWith(compareByDescending<Match> { it.totalScore.value }.thenByDescending { it.id })
+        return matches.values.toList()
+            .sortedWith(compareByDescending<Match> { it.totalScore.value }.thenByDescending { it.id })
     }
 
 }

@@ -13,7 +13,7 @@ object TeamNameGenerator {
         return teamNames
     }
 
-    internal fun generateNextName(current: String): String {
+    private fun generateNextName(current: String): String {
         if (current.isEmpty()) return "A"
         val lastChar = current.last()
         return if (lastChar < 'Z') {

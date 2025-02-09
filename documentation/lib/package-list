@@ -1,0 +1,34 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:org.sportradar.domain.model////PointingToDeclaration/lib/org.sportradar.domain.model/index.html
+$dokka.location:org.sportradar.domain.model/Match///PointingToDeclaration/lib/org.sportradar.domain.model/-match/index.html
+$dokka.location:org.sportradar.domain.model/Match/Match/#kotlin.Long#org.sportradar.domain.model.Team#org.sportradar.domain.model.Team#org.sportradar.domain.model.Score#org.sportradar.domain.model.Score#org.sportradar.domain.model.Reason?/PointingToDeclaration/lib/org.sportradar.domain.model/-match/-match.html
+$dokka.location:org.sportradar.domain.model/Match/awayScore/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/away-score.html
+$dokka.location:org.sportradar.domain.model/Match/awayTeam/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/away-team.html
+$dokka.location:org.sportradar.domain.model/Match/homeScore/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/home-score.html
+$dokka.location:org.sportradar.domain.model/Match/homeTeam/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/home-team.html
+$dokka.location:org.sportradar.domain.model/Match/id/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/id.html
+$dokka.location:org.sportradar.domain.model/Match/reason/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/reason.html
+$dokka.location:org.sportradar.domain.model/Match/totalScore/#/PointingToDeclaration/lib/org.sportradar.domain.model/-match/total-score.html
+$dokka.location:org.sportradar.domain.model/Reason///PointingToDeclaration/lib/org.sportradar.domain.model/-reason/index.html
+$dokka.location:org.sportradar.domain.model/Reason/Reason/#kotlin.String/PointingToDeclaration/lib/org.sportradar.domain.model/-reason/-reason.html
+$dokka.location:org.sportradar.domain.model/Reason/message/#/PointingToDeclaration/lib/org.sportradar.domain.model/-reason/message.html
+$dokka.location:org.sportradar.domain.model/Score///PointingToDeclaration/lib/org.sportradar.domain.model/-score/index.html
+$dokka.location:org.sportradar.domain.model/Score/Score/#kotlin.Int/PointingToDeclaration/lib/org.sportradar.domain.model/-score/-score.html
+$dokka.location:org.sportradar.domain.model/Score/plus/#org.sportradar.domain.model.Score/PointingToDeclaration/lib/org.sportradar.domain.model/-score/plus.html
+$dokka.location:org.sportradar.domain.model/Score/value/#/PointingToDeclaration/lib/org.sportradar.domain.model/-score/value.html
+$dokka.location:org.sportradar.domain.model/Team.Companion///PointingToDeclaration/lib/org.sportradar.domain.model/-team/-companion/index.html
+$dokka.location:org.sportradar.domain.model/Team///PointingToDeclaration/lib/org.sportradar.domain.model/-team/index.html
+$dokka.location:org.sportradar.domain.model/Team/Team/#kotlin.String/PointingToDeclaration/lib/org.sportradar.domain.model/-team/-team.html
+$dokka.location:org.sportradar.domain.model/Team/name/#/PointingToDeclaration/lib/org.sportradar.domain.model/-team/name.html
+$dokka.location:org.sportradar////PointingToDeclaration/lib/org.sportradar/index.html
+$dokka.location:org.sportradar/ScoreboardApi.Companion///PointingToDeclaration/lib/org.sportradar/-scoreboard-api/-companion/index.html
+$dokka.location:org.sportradar/ScoreboardApi.Companion/create/#/PointingToDeclaration/lib/org.sportradar/-scoreboard-api/-companion/create.html
+$dokka.location:org.sportradar/ScoreboardApi///PointingToDeclaration/lib/org.sportradar/-scoreboard-api/index.html
+$dokka.location:org.sportradar/ScoreboardApi/finishMatch/#org.sportradar.domain.model.Team#org.sportradar.domain.model.Team/PointingToDeclaration/lib/org.sportradar/-scoreboard-api/finish-match.html
+$dokka.location:org.sportradar/ScoreboardApi/getAllOngoingMatches/#/PointingToDeclaration/lib/org.sportradar/-scoreboard-api/get-all-ongoing-matches.html
+$dokka.location:org.sportradar/ScoreboardApi/startMatch/#org.sportradar.domain.model.Team#org.sportradar.domain.model.Team/PointingToDeclaration/lib/org.sportradar/-scoreboard-api/start-match.html
+$dokka.location:org.sportradar/ScoreboardApi/updateScore/#org.sportradar.domain.model.Team#org.sportradar.domain.model.Team#org.sportradar.domain.model.Score#org.sportradar.domain.model.Score#org.sportradar.domain.model.Reason?/PointingToDeclaration/lib/org.sportradar/-scoreboard-api/update-score.html
+org.sportradar
+org.sportradar.domain.model
+

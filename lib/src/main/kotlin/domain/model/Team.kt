@@ -1,4 +1,24 @@
+/**
+ * @file Team.kt
+ * This file contains the implementation of the `Team` class, which is a part of the `org.sportradar.domain.model` package.
+ *
+ * The `Team` class represents a sport team with validation for name constraints.
+ * It ensures that the team name is not blank and conforms to specified naming rules, such as allowing only letters,
+ * spaces, and a length limit of 1 to 50 characters.
+ */
+
 package org.sportradar.domain.model
+/**
+ * Represents a team in a sport.
+ *
+ * @property name The name of the team. It must not be empty or blank and can only include letters, spaces, and must be between 1 to 50 characters.
+ * @throws IllegalArgumentException If the name doesn't meet the validation requirements.
+ *
+ * Example:
+ * ```
+ * val team = Team("Manchester United")
+ * ```
+ */
 
 data class Team(val name: String){
     init {
