@@ -10,6 +10,7 @@ import org.sportradar.domain.repository.ScoreboardRepository
 
 class ScoreboardApi(private val repository: ScoreboardRepository) {
 
+    @Synchronized
     fun startMatch(homeTeam: Team, awayTeam: Team) {
         require(homeTeam != awayTeam) { "Teams must have unique names" }
         val matches = repository.getAllOngoingMatches()
@@ -25,6 +26,7 @@ class ScoreboardApi(private val repository: ScoreboardRepository) {
         repository.addMatch(Match(0,homeTeam, awayTeam, Score(0), Score(0)))
     }
 
+    @Synchronized
     fun updateScore(homeTeam: Team, awayTeam: Team, homeScore: Score, awayScore: Score, reasonForUpdate: Reason? = null) {
         val match = repository.findMatch(homeTeam, awayTeam) ?: throw IllegalArgumentException("Match not found")
         if (homeScore.value < match.homeScore.value || awayScore.value < match.awayScore.value) {
@@ -36,6 +38,7 @@ class ScoreboardApi(private val repository: ScoreboardRepository) {
         repository.updateMatch(match)
     }
 
+    @Synchronized
     fun finishMatch(homeTeam: Team, awayTeam: Team) {
         val match = repository.findMatch(homeTeam, awayTeam)
         match?.let { repository.deleteMatch(it) } ?: throw IllegalArgumentException("Match not found")
