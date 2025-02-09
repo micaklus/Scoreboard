@@ -23,9 +23,9 @@ class ScoreboardApiTest {
     @Test
     fun `should return all ongoing matches from repository`() {
         // Arrange: Start 3 matches
-        val match1 = Match(Team("Mexico"), Team("Canada"), Score(0), Score(0))
-        val match2 = Match(Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
-        val match3 = Match(Team("Australia"), Team("Germany"), Score(0), Score(0))
+        val match1 = Match(1,Team("Mexico"), Team("Canada"), Score(0), Score(0))
+        val match2 = Match(2,Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
+        val match3 = Match(3,Team("Australia"), Team("Germany"), Score(0), Score(0))
 
         scoreboardApi.startMatch(match1.homeTeam, match1.awayTeam)
         scoreboardApi.startMatch(match2.homeTeam, match2.awayTeam)
@@ -237,5 +237,30 @@ class ScoreboardApiTest {
             scoreboardApi.startMatch(teams[i], teams[i + count])
         }
         assertEquals(count, scoreboardApi.getAllOngoingMatches().size)
+    }
+
+    @Test
+    fun `should return summary sorted by total score and most recent match`() {
+        scoreboardApi.startMatch(Team("Mexico"), Team("Canada"))
+        scoreboardApi.updateScore(Team("Mexico"), Team("Canada"), Score(0), Score(5))
+
+        scoreboardApi.startMatch(Team("Spain"), Team("Brazil"))
+        scoreboardApi.updateScore(Team("Spain"), Team("Brazil"), Score(10), Score(2))
+
+        scoreboardApi.startMatch(Team("Germany"), Team("France"))
+        scoreboardApi.updateScore(Team("Germany"), Team("France"), Score(2), Score(2))
+
+        scoreboardApi.startMatch(Team("Uruguay"), Team("Italy"))
+        scoreboardApi.updateScore(Team("Uruguay"), Team("Italy"), Score(6), Score(6))
+
+        scoreboardApi.startMatch(Team("Argentina"), Team("Australia"))
+        scoreboardApi.updateScore(Team("Argentina"), Team("Australia"), Score(3), Score(1))
+
+        val summary = scoreboardApi.getAllOngoingMatches()
+        assertEquals(Team("Uruguay"), summary[0].homeTeam)
+        assertEquals(Team("Spain"), summary[1].homeTeam)
+        assertEquals(Team("Mexico"), summary[2].homeTeam)
+        assertEquals(Team("Argentina"), summary[3].homeTeam)
+        assertEquals(Team("Germany"), summary[4].homeTeam)
     }
 }

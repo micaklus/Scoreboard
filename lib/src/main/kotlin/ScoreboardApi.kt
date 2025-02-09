@@ -5,9 +5,12 @@ import org.sportradar.domain.model.Match
 import org.sportradar.domain.model.Score
 import org.sportradar.domain.model.Team
 import org.sportradar.domain.repository.ScoreboardRepository
+import java.util.concurrent.atomic.AtomicLong
 
 
 class ScoreboardApi(private val repository: ScoreboardRepository) {
+    private val matchCounter = AtomicLong(0)
+
     fun startMatch(homeTeam: Team, awayTeam: Team) {
         require(homeTeam != awayTeam) { "Teams must have unique names" }
         val matches = repository.getAllOngoingMatches()
@@ -20,7 +23,7 @@ class ScoreboardApi(private val repository: ScoreboardRepository) {
         require(matches.none { it.homeTeam == homeTeam && it.awayTeam == awayTeam }) {
             "Match between these teams already exists"
         }
-        repository.addMatch(Match(homeTeam, awayTeam, Score(0), Score(0)))
+        repository.addMatch(Match(matchCounter.getAndIncrement(),homeTeam, awayTeam, Score(0), Score(0)))
     }
 
     fun updateScore(homeTeam: Team, awayTeam: Team, homeScore: Score, awayScore: Score) {

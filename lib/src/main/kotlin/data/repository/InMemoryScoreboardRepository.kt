@@ -24,7 +24,7 @@ class InMemoryScoreboardRepository : ScoreboardRepository {
     }
 
     override fun getAllOngoingMatches(): List<Match> {
-        return matches
+        return matches.sortedWith(compareByDescending<Match> { it.totalScore.value }.thenByDescending { it.id })
     }
 
 }
