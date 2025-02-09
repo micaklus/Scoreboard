@@ -10,23 +10,23 @@ import org.sportradar.domain.repository.ScoreboardRepository
 
 class ScoreboardApi(private val repository: ScoreboardRepository) {
 
-    @Synchronized
+
     fun startMatch(homeTeam: Team, awayTeam: Team) {
         require(homeTeam != awayTeam) { "Teams must have unique names" }
         val matches = repository.getAllOngoingMatches()
-        require(matches.none { it.homeTeam == homeTeam || it.awayTeam == homeTeam }) {
+        require(repository.findMatch(homeTeam,awayTeam)==null) {
+            "Match between these teams already exists"
+        }
+        require(!repository.isTeamInAnyMatch(homeTeam)) {
             "${homeTeam.name} is already playing another match"
         }
-        require(matches.none { it.homeTeam == awayTeam || it.awayTeam == awayTeam }) {
+        require(!repository.isTeamInAnyMatch(awayTeam)) {
             "${awayTeam.name} is already playing another match"
-        }
-        require(matches.none { it.homeTeam == homeTeam && it.awayTeam == awayTeam }) {
-            "Match between these teams already exists"
         }
         repository.addMatch(Match(0,homeTeam, awayTeam, Score(0), Score(0)))
     }
 
-    @Synchronized
+
     fun updateScore(homeTeam: Team, awayTeam: Team, homeScore: Score, awayScore: Score, reasonForUpdate: Reason? = null) {
         val match = repository.findMatch(homeTeam, awayTeam) ?: throw IllegalArgumentException("Match not found")
         if (homeScore.value < match.homeScore.value || awayScore.value < match.awayScore.value) {
@@ -34,11 +34,10 @@ class ScoreboardApi(private val repository: ScoreboardRepository) {
                 "A valid reason must be provided for lowering the score"
             }
         }
-        match.updateScore(homeScore, awayScore)
-        repository.updateMatch(match)
+        repository.updateMatch(Match(match.id, homeTeam, awayTeam, homeScore, awayScore))
     }
 
-    @Synchronized
+
     fun finishMatch(homeTeam: Team, awayTeam: Team) {
         val match = repository.findMatch(homeTeam, awayTeam)
         match?.let { repository.deleteMatch(it) } ?: throw IllegalArgumentException("Match not found")

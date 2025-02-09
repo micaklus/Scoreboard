@@ -9,5 +9,5 @@ interface ScoreboardRepository {
     fun deleteMatch(match: Match)
     fun findMatch(homeTeam: Team, awayTeam: Team): Match?
     fun getAllOngoingMatches(): List<Match>
-
+    fun isTeamInAnyMatch(team: Team): Boolean
 }

@@ -13,14 +13,14 @@ class ScoreboardApiThreadSafetyTest {
 
     @Test
     fun `test concurrent startMatch operations`() {
-        val numThreads = 10
+        val numThreads = 10000
         val executor = Executors.newFixedThreadPool(numThreads)
 
         // Teams for distinct matches
-// Retrieve list of Team objects from the generator
+        // Retrieve list of Team objects from the generator
         val allStartTeams: List<Team> = TeamNameGenerator.generateTeamNames(numThreads * 2)
 
-// Pair up teams as homeTeam and awayTeam for matches
+        // Pair up teams as homeTeam and awayTeam for matches
         val teams = allStartTeams.chunked(2).map { Pair(it[0], it[1]) }
 
 
@@ -46,7 +46,7 @@ class ScoreboardApiThreadSafetyTest {
 
     @Test
     fun `test concurrent updateScore operations`() {
-        val numThreads = 5
+        val numThreads = 1999
         val executor = Executors.newFixedThreadPool(numThreads)
 
         val homeTeam = Team("Home")
@@ -80,7 +80,7 @@ class ScoreboardApiThreadSafetyTest {
         // Start a match to be finished
         api.startMatch(homeTeam, awayTeam)
 
-        val numThreads = 10
+        val numThreads = 1000
         val executor = Executors.newFixedThreadPool(numThreads)
 
         // Multiple threads will try to finish the same match
