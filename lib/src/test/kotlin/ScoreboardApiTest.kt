@@ -24,9 +24,9 @@ class ScoreboardApiTest {
     @Test
     fun `should return all ongoing matches from repository`() {
         // Arrange: Start 3 matches
-        val match1 = Match(1,Team("Mexico"), Team("Canada"), Score(0), Score(0))
-        val match2 = Match(2,Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
-        val match3 = Match(3,Team("Australia"), Team("Germany"), Score(0), Score(0))
+        val match1 = Match(0,Team("Mexico"), Team("Canada"), Score(0), Score(0))
+        val match2 = Match(1,Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
+        val match3 = Match(2,Team("Australia"), Team("Germany"), Score(0), Score(0))
 
         scoreboardApi.startMatch(match1.homeTeam, match1.awayTeam)
         scoreboardApi.startMatch(match2.homeTeam, match2.awayTeam)

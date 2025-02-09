@@ -6,7 +6,6 @@ import org.sportradar.domain.model.Reason
 import org.sportradar.domain.model.Score
 import org.sportradar.domain.model.Team
 import org.sportradar.domain.repository.ScoreboardRepository
-import java.util.concurrent.atomic.AtomicLong
 
 
 class ScoreboardApi(private val repository: ScoreboardRepository) {
