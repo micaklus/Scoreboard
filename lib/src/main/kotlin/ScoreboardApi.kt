@@ -2,6 +2,7 @@ package org.sportradar
 
 import org.sportradar.data.repository.InMemoryScoreboardRepository
 import org.sportradar.domain.model.Match
+import org.sportradar.domain.model.Reason
 import org.sportradar.domain.model.Score
 import org.sportradar.domain.model.Team
 import org.sportradar.domain.repository.ScoreboardRepository
@@ -26,8 +27,13 @@ class ScoreboardApi(private val repository: ScoreboardRepository) {
         repository.addMatch(Match(matchCounter.getAndIncrement(),homeTeam, awayTeam, Score(0), Score(0)))
     }
 
-    fun updateScore(homeTeam: Team, awayTeam: Team, homeScore: Score, awayScore: Score) {
+    fun updateScore(homeTeam: Team, awayTeam: Team, homeScore: Score, awayScore: Score, reasonForUpdate: Reason? = null) {
         val match = repository.findMatch(homeTeam, awayTeam) ?: throw IllegalArgumentException("Match not found")
+        if (homeScore.value < match.homeScore.value || awayScore.value < match.awayScore.value) {
+            require(!reasonForUpdate?.message.isNullOrBlank()) {
+                "A valid reason must be provided for lowering the score"
+            }
+        }
         match.updateScore(homeScore, awayScore)
         repository.updateMatch(match)
     }

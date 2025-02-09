@@ -5,7 +5,8 @@ data class Match(
     val homeTeam: Team,
     val awayTeam: Team,
     private var _homeScore: Score = Score(0),
-    private var _awayScore: Score = Score(0)
+    private var _awayScore: Score = Score(0),
+    val reason : Reason? = null
 ) {
     // Public read-only accessors for immutability
     val homeScore: Score get() = _homeScore

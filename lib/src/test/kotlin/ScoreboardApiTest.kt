@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.sportradar.ScoreboardApi
 import org.sportradar.domain.model.Match
+import org.sportradar.domain.model.Reason
 import org.sportradar.domain.model.Score
 import org.sportradar.domain.model.Team
 import kotlin.test.Test
@@ -262,5 +263,31 @@ class ScoreboardApiTest {
         assertEquals(Team("Mexico"), summary[2].homeTeam)
         assertEquals(Team("Argentina"), summary[3].homeTeam)
         assertEquals(Team("Germany"), summary[4].homeTeam)
+    }
+
+    @Test
+    fun `should allow lowering scores with valid reason`() {
+        scoreboardApi.startMatch(Team("Spain"), Team("Portugal"))
+        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(2), Score(1))// Original score
+
+        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"),Score(1),Score(1), Reason("Goal canceled by VAR"))
+
+        val match = scoreboardApi.getAllOngoingMatches().first()
+        assertEquals(1, match.homeScore.value)
+        assertEquals(1, match.awayScore.value)
+    }
+
+    @Test
+    fun `should not allow lowering scores without valid reason`() {
+        scoreboardApi.startMatch(Team("Spain"), Team("Portugal"))
+        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(2), Score(1))// Original score
+
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.updateScore(Team("Spain"), Team("Portugal"),Score(1),Score(1))
+        }
+        assertEquals("A valid reason must be provided for lowering the score", exception.message)
+        val match = scoreboardApi.getAllOngoingMatches().first()
+        assertEquals(2, match.homeScore.value)
+        assertEquals(1, match.awayScore.value)
     }
 }
