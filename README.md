@@ -13,6 +13,9 @@ Clone the repository and build the project. SDK code with tests is located lib m
 
 ## Assumptions for Tests
 
+### **Match Summary**
+- Return all started matches
+
 ### **Match Creation**
 - Teams must have unique names: Starting a match with the same team names is not allowed.
 - Start a new match with an initial score of 0-0: Matches are initialized with 0-0 scores and added to the summary list.
@@ -20,12 +23,12 @@ Clone the repository and build the project. SDK code with tests is located lib m
 
 ### **Managing Matches**
 - Finish a match and remove it from the scoreboard: Finishing a match removes it from the list of ongoing matches.
-- Remove match when it’s finished: Finished matches no longer appear in the summary.
 - Error when trying to finish a non-existing match: Attempting to finish a match that doesn't exist results in an error.
 - A team can start a new match after finishing the previous one: Teams are eligible to join new matches after the previous one is concluded.
 - Allow finishing a match without updating the score: Matches can be finished even if no score updates were applied.
 
 ### **Score Updates**
+- Update match with new score
 - Scores cannot be negative: Negative scores during updates are not allowed (e.g., `-4`).
 - Updating scores with the same values is allowed: Scores can be updated to the same values multiple times without error.
 - Cannot update scores for a non-existing match: Only existing matches can have their scores updated.
