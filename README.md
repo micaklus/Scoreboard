@@ -39,6 +39,12 @@ Clone the repository and build the project. SDK code with tests is located lib m
 - No team can play two matches at the same time: Teams already playing cannot start another match until the previous one is finished.
 - (Threading) Handle a large number of matches without issues: The scoreboard supports up to 1000 matches for stress testing.
 
+### **Input validation**
+
+- Reasons provided for lowering scores must not exceed 100 characters.
+- Scores must be non-negative and cannot exceed a value of 2000.
+- Team names must have a maximum length of 50 characters.
+
 ## Usage
 
 Is described in documentation folder
