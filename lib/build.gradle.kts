@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.1.0"
-    id("org.jetbrains.dokka") version "1.9.0"
+    kotlin("jvm") version "2.0.21"
+    //id("org.jetbrains.dokka") version "1.9.0"
 }
 
 group = "org.sportradar.lib"
@@ -19,11 +19,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.dokkaHtml {
-    outputDirectory.set(file("build/docs/dokka"))
-}
+//tasks.dokkaHtml {
+//    outputDirectory.set(file("build/docs/dokka"))
+//}
 
 kotlin {
     jvmToolchain(17)
-    explicitApiWarning()
 }
