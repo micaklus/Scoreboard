@@ -22,5 +22,6 @@ package org.sportradar.domain.model
 data class Reason(val message: String) {
     init {
         require(message.isNotBlank()) { "Reason message cannot be empty or blank" }
+        require(message.length <= 200)  { "Reason message to big. Max 200 chars allowed" }
     }
 }

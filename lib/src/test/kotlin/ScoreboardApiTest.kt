@@ -23,22 +23,18 @@ class ScoreboardApiTest {
     // Match summary
     @Test
     fun `should return all ongoing matches from repository`() {
-        // Arrange: Start 3 matches
-        val match1 = Match(0,Team("Mexico"), Team("Canada"), Score(0), Score(0))
-        val match2 = Match(1,Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
-        val match3 = Match(2,Team("Australia"), Team("Germany"), Score(0), Score(0))
+        val match1 = Match(0, Team("Mexico"), Team("Canada"), Score(0), Score(0))
+        val match2 = Match(1, Team("Slovenia"), Team("Croatia"), Score(0), Score(0))
+        val match3 = Match(2, Team("Australia"), Team("Germany"), Score(0), Score(0))
 
         scoreboardApi.startMatch(match1.homeTeam, match1.awayTeam)
         scoreboardApi.startMatch(match2.homeTeam, match2.awayTeam)
         scoreboardApi.startMatch(match3.homeTeam, match3.awayTeam)
 
-        // Act: Get all ongoing matches
         val matches = scoreboardApi.getAllOngoingMatches()
 
-        // Assert: Check that the size of the matches is 3
         assertEquals(3, matches.size)
 
-        // Assert: Check that all matches are present in the list
         assertTrue(matches.contains(match1))
         assertTrue(matches.contains(match2))
         assertTrue(matches.contains(match3))
@@ -51,12 +47,10 @@ class ScoreboardApiTest {
     fun `should not allow starting a match with duplicate team names`() {
         val teamName = Team("HomeTeam")
 
-        // Attempt to start a match where both teams have the same name
         val exception = assertThrows<IllegalArgumentException> {
             scoreboardApi.startMatch(teamName, teamName)
         }
 
-        // Verify that the exception message matches the expected validation rule
         assertEquals("Teams must have unique names", exception.message)
     }
 
@@ -155,7 +149,7 @@ class ScoreboardApiTest {
     @Test
     fun `should not allow updating scores for a non-existing match`() {
         val exception = assertThrows<IllegalArgumentException> {
-            scoreboardApi.updateScore(Team("Slovenia") ,Team("Brazil"),Score(3),Score(4))
+            scoreboardApi.updateScore(Team("Slovenia"), Team("Brazil"), Score(3), Score(4))
         }
         assertEquals("Match not found", exception.message)
     }
@@ -181,33 +175,29 @@ class ScoreboardApiTest {
 
             println("Starting match: $homeTeam vs $awayTeam")
 
-            // Start the match
             scoreboardApi.startMatch(homeTeam, awayTeam)
 
-            // Assign realistic scores
             val homeScore = i * 2 % 10
             val awayScore = i * 3 % 10
             println("Updating score: $homeTeam ($homeScore) - $awayTeam ($awayScore)")
             scoreboardApi.updateScore(homeTeam, awayTeam, Score(homeScore), Score(awayScore))
 
-            // Save expected scores in a map using the team names as key
             expectedScores["$homeTeam vs $awayTeam"] = Pair(homeScore, awayScore)
         }
 
-        // Verify scores are applied correctly for each match in the summary
         val summary = scoreboardApi.getAllOngoingMatches()
         for (match in summary) {
             val expected = expectedScores["${match.homeTeam} vs ${match.awayTeam}"]
 
-            // Check if the match exists in the expected scores
             if (expected == null) fail("Unexpected match found: ${match.homeTeam} vs ${match.awayTeam}")
 
             val expectedHomeScore = expected.first
             val expectedAwayScore = expected.second
 
-            // Custom messages for detailed error reporting
-            val errorMessageHome = "Failed for match '${match.homeTeam} vs ${match.awayTeam}': home team expected $expectedHomeScore, but got ${match.homeScore}"
-            val errorMessageAway = "Failed for match '${match.homeTeam} vs ${match.awayTeam}': away team expected $expectedAwayScore, but got ${match.awayScore}"
+            val errorMessageHome =
+                "Failed for match '${match.homeTeam} vs ${match.awayTeam}': home team expected $expectedHomeScore, but got ${match.homeScore}"
+            val errorMessageAway =
+                "Failed for match '${match.homeTeam} vs ${match.awayTeam}': away team expected $expectedAwayScore, but got ${match.awayScore}"
 
             assertEquals(expectedHomeScore, match.homeScore.value, errorMessageHome)
             assertEquals(expectedAwayScore, match.awayScore.value, errorMessageAway)
@@ -270,7 +260,7 @@ class ScoreboardApiTest {
         scoreboardApi.startMatch(Team("Spain"), Team("Portugal"))
         scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(2), Score(1))// Original score
 
-        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"),Score(1),Score(1), Reason("Goal canceled by VAR"))
+        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(1), Score(1), Reason("Goal canceled by VAR"))
 
         val match = scoreboardApi.getAllOngoingMatches().first()
         assertEquals(1, match.homeScore.value)
@@ -283,11 +273,55 @@ class ScoreboardApiTest {
         scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(2), Score(1))// Original score
 
         val exception = assertThrows<IllegalArgumentException> {
-            scoreboardApi.updateScore(Team("Spain"), Team("Portugal"),Score(1),Score(1))
+            scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(1), Score(1))
         }
         assertEquals("A valid reason must be provided for lowering the score", exception.message)
         val match = scoreboardApi.getAllOngoingMatches().first()
         assertEquals(2, match.homeScore.value)
         assertEquals(1, match.awayScore.value)
     }
+
+    @Test
+    fun `should not allow team name longer than 50 characters`() {
+        val longName = "A".repeat(51)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            Team(longName)
+        }
+
+        assertEquals(
+            "Invalid team name. Only letters and spaces are allowed, with a maximum length of 50 characters.",
+            exception.message
+        )
+    }
+
+    @Test
+    fun `should not allow lowering scores with reason longer than 200 characters`() {
+        scoreboardApi.startMatch(Team("Spain"), Team("Portugal"))
+        scoreboardApi.updateScore(Team("Spain"), Team("Portugal"), Score(2), Score(1)) // Original score
+
+        val longReason = "A".repeat(201)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            scoreboardApi.updateScore(
+                Team("Spain"),
+                Team("Portugal"),
+                Score(1),
+                Score(1),
+                Reason(longReason)
+            )
+        }
+        assertEquals("Reason message to big. Max 200 chars allowed", exception.message)
+    }
+
+    @Test
+    fun `should not allow score greater than 2000`() {
+        val exception = assertThrows<IllegalArgumentException> {
+            Score(2001)
+        }
+        assertEquals("Too big score for a soccer match", exception.message)
+    }
+
+
+
 }
