@@ -3,6 +3,23 @@
 // It is also used for some aspects of project-wide configuration, like managing plugins, dependencies, etc.
 // https://docs.gradle.org/current/userguide/settings_file_basics.html
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+    }
+
+    plugins {
+        kotlin("jvm").version(extra["kotlin.version"] as String)
+        id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+        id("org.jetbrains.compose").version(extra["compose.version"] as String)
+        id("org.jetbrains.kotlin.plugin.compose").version(extra["kotlin.version"] as String)
+    }
+}
+
+
 dependencyResolutionManagement {
     // Use Maven Central as the default repository (where Gradle will download dependencies) in all subprojects.
     @Suppress("UnstableApiUsage")

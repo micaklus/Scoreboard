@@ -48,7 +48,6 @@ Clone the repository and build the project. SDK code with tests is located lib m
 
 Is described in documentation folder
 
-
 ## Steps in solving problem
 1. Create multi-module project
 2. Write assumptions
@@ -57,3 +56,4 @@ Is described in documentation folder
 5. Written all tests and running them successfully
 6. Threading tests and fixing
 7. Documentation comments for usable methods and classes
+8. Adding simple desktop app to show library use [app module]

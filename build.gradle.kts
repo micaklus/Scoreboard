@@ -1,9 +1,8 @@
 plugins {
     kotlin("jvm") version "2.0.21"
-    //id("org.jetbrains.dokka") version "1.9.0"
 }
 
-group = "org.sportradar.lib"
+group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -18,11 +17,6 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-
-//tasks.dokkaHtml {
-//    outputDirectory.set(file("build/docs/dokka"))
-//}
-
 kotlin {
     jvmToolchain(17)
 }
